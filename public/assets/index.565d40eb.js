@@ -9683,7 +9683,7 @@ const E = Ml.exports.jsx,
 					className: 'btn btn-primary',
 					onClick: () => {
 						const r = localStorage.getItem('lastPath') || '/';
-						e('Fernando Herrera'), t(r, { replace: !0 });
+						e('TrujiDev'), t(r, { replace: !0 });
 					},
 					children: 'Login',
 				}),
