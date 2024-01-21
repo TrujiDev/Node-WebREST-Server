@@ -26,4 +26,14 @@ export class TodoController {
 			? res.json(todo)
 			: res.status(404).json({ message: `todo with ID ${id} is not found` });
 	}
+
+	public createNewTodo(req: Request, res: Response) {
+		const { title } = req.body;
+		if (!title)
+			return res.status(400).json({ message: 'Title argument is missing' });
+
+		const newTodo = { id: todos.length + 1, title, created_at: new Date() };
+		todos.push(newTodo);
+		return res.json(newTodo);
+	}
 }
