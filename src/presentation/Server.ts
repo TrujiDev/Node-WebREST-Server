@@ -22,7 +22,11 @@ export class Server {
 	}
 
 	async start() {
-		// Middleware
+		// Body parser
+		this.app.use(express.json()); // for parsing application/json
+		this.app.use(express.urlencoded({ extended: true })); // for parsing application/x-www-form-urlencoded
+
+		// Public folder
 		this.app.use(express.static(this.publicPath));
 
 		// Routes
