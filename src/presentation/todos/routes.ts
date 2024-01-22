@@ -8,8 +8,10 @@ export class TodoRoutes {
 
 		router.get('/', todoController.getTodos);
 		router.get('/:id', todoController.getTodoById);
-		
+
 		router.post('/new-todo', todoController.createNewTodo);
+
+		router.put('/:id', todoController.updateTodoById);
 
 		return router;
 	}
