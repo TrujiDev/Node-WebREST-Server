@@ -1,5 +1,6 @@
 import { Request, Response } from 'express';
 import { prisma } from '../../data/postgres';
+import { CreateDtoTodo, UpdateDtoTodo } from '../../domain/dtos';
 
 export class TodoController {
 	constructor() {}
@@ -23,12 +24,11 @@ export class TodoController {
 	};
 
 	public createNewTodo = async (req: Request, res: Response) => {
-		const { title } = req.body;
-		if (!title)
-			return res.status(400).json({ message: 'Title argument is missing' });
+		const [error, createDtoTodo] = CreateDtoTodo.create(req.body);
+		if (error) return res.status(400).json({ message: error });
 
 		const todo = await prisma.todo.create({
-			data: { title },
+			data: createDtoTodo!,
 		});
 
 		return res.json(todo);
@@ -36,21 +36,16 @@ export class TodoController {
 
 	public updateTodoById = async (req: Request, res: Response) => {
 		const id = +req.params.id;
-		if (isNaN(id))
-			return res.status(400).json({ message: 'ID argument is not a number' });
+		const [error, updateTodoDto] = UpdateDtoTodo.update({ ...req.body, id });
+		if (error) return res.status(400).json({ message: error });
 
 		const todo = await prisma.todo.findFirst({ where: { id } });
 		if (!todo)
 			return res.status(404).json({ message: `todo with ID ${id} is not found` });
 
-		const { title, completed_at } = req.body;
-
 		const updatedTodo = await prisma.todo.update({
 			where: { id },
-			data: {
-				title,
-				completed_at: completed_at ? new Date(completed_at) : null,
-			},
+			data: updateTodoDto!.values,
 		});
 
 		return res.json(updatedTodo);
