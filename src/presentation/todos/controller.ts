@@ -39,7 +39,7 @@ export class TodoController {
 		if (isNaN(id))
 			return res.status(400).json({ message: 'ID argument is not a number' });
 
-		const todo = await prisma.todo.findUnique({ where: { id } });
+		const todo = await prisma.todo.findFirst({ where: { id } });
 		if (!todo)
 			return res.status(404).json({ message: `todo with ID ${id} is not found` });
 
@@ -47,7 +47,10 @@ export class TodoController {
 
 		const updatedTodo = await prisma.todo.update({
 			where: { id },
-			data: { title, completed_at },
+			data: {
+				title,
+				completed_at: completed_at ? new Date(completed_at) : null,
+			},
 		});
 
 		return res.json(updatedTodo);
@@ -58,12 +61,14 @@ export class TodoController {
 		if (isNaN(id))
 			return res.status(400).json({ message: 'ID argument is not a number' });
 
-		const todo = await prisma.todo.findUnique({ where: { id } });
+		const todo = await prisma.todo.findFirst({ where: { id } });
 		if (!todo)
 			return res.status(404).json({ message: `todo with ID ${id} is not found` });
 
-		await prisma.todo.delete({ where: { id } });
+		const deleted = await prisma.todo.delete({ where: { id } });
 
-		return res.json({ message: `todo with ID ${id} is deleted` });
+		deleted
+			? res.json({ message: `todo with ID ${id} is deleted` })
+			: res.status(404).json({ message: `todo with ID ${id} is not found` });
 	};
 }
