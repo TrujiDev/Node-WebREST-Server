@@ -1,6 +1,6 @@
 import { Request, Response } from 'express';
 import { prisma } from '../../data/postgres';
-import { CreateDtoTodo, UpdateDtoTodo } from '../../domain/dtos';
+import { CreateTodoDto, UpdateTodoDto } from '../../domain/dtos';
 
 export class TodoController {
 	constructor() {}
@@ -24,7 +24,7 @@ export class TodoController {
 	};
 
 	public createNewTodo = async (req: Request, res: Response) => {
-		const [error, createDtoTodo] = CreateDtoTodo.create(req.body);
+		const [error, createDtoTodo] = CreateTodoDto.create(req.body);
 		if (error) return res.status(400).json({ message: error });
 
 		const todo = await prisma.todo.create({
@@ -36,7 +36,7 @@ export class TodoController {
 
 	public updateTodoById = async (req: Request, res: Response) => {
 		const id = +req.params.id;
-		const [error, updateTodoDto] = UpdateDtoTodo.update({ ...req.body, id });
+		const [error, updateTodoDto] = UpdateTodoDto.update({ ...req.body, id });
 		if (error) return res.status(400).json({ message: error });
 
 		const todo = await prisma.todo.findFirst({ where: { id } });
