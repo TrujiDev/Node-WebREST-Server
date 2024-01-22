@@ -13,6 +13,8 @@ export class TodoRoutes {
 
 		router.put('/:id', todoController.updateTodoById);
 
+		router.delete('/:id', todoController.deleteTodoById);
+
 		return router;
 	}
 }
