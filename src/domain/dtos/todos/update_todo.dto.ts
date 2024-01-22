@@ -1,4 +1,4 @@
-export class UpdateDtoTodo {
+export class UpdateTodoDto {
 	private constructor(
 		public readonly id: number,
 		public readonly title?: string,
@@ -14,7 +14,7 @@ export class UpdateDtoTodo {
 		return returnObj;
 	}
 
-	static update(props: { [key: string]: any }): [string?, UpdateDtoTodo?] {
+	static update(props: { [key: string]: any }): [string?, UpdateTodoDto?] {
 		const { id, title, completed_at } = props;
 		let newCompletedAt = completed_at;
 
@@ -26,6 +26,6 @@ export class UpdateDtoTodo {
 				return ['completed_at is not a valid date', undefined];
 		}
 
-		return [undefined, new UpdateDtoTodo(id, title, newCompletedAt)];
+		return [undefined, new UpdateTodoDto(id, title, newCompletedAt)];
 	}
 }
